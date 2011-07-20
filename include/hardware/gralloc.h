@@ -65,6 +65,9 @@ enum {
     GRALLOC_USAGE_HW_RENDER       = 0x00000200,
     /* buffer will be used by the 2D hardware blitter */
     GRALLOC_USAGE_HW_2D           = 0x00000400,
+#ifdef USE_ASHMEM
+    GRALLOC_USAGE_HW_PMEM         = 0x00002000,
+#endif
     /* buffer will be used with the framebuffer device */
     GRALLOC_USAGE_HW_FB           = 0x00001000,
     /* mask for the software usage bit-mask */
@@ -88,6 +91,7 @@ enum {
      * you know what you're doing.
      */
     GRALLOC_MODULE_PERFORM_CREATE_HANDLE_FROM_BUFFER = 0x080000001,
+    GRALLOC_MODULE_PERFORM_DECIDE_PUSH_BUFFER_HANDLING = 0x080000002,
 };
 
 /**
@@ -254,7 +258,10 @@ typedef struct framebuffer_device_t {
     /* max swap interval supported by this framebuffer */
     const int       maxSwapInterval;
 
-    int reserved[8];
+    /* number of framebuffers */
+    const int       numFramebuffers;
+
+    int reserved[7];
     
     /* 
      * requests a specific swap-interval (same definition than EGL) 
@@ -315,9 +322,14 @@ typedef struct framebuffer_device_t {
      */
 
     int (*compositionComplete)(struct framebuffer_device_t* dev);
+    int (*orientationChanged) (struct framebuffer_device_t* dev, int);
+    int (*videoOverlayStarted) (struct framebuffer_device_t* dev, int);
+    int (*enableHDMIOutput) (struct framebuffer_device_t* dev, int);
+    int (*setActionSafeWidthRatio) (struct framebuffer_device_t* dev, float);
+    int (*setActionSafeHeightRatio) (struct framebuffer_device_t* dev, float);
+    int (*dequeueBuffer) (struct framebuffer_device_t* dev, int);
 
-
-    void* reserved_proc[8];
+    void* reserved_proc[7];
 
 } framebuffer_device_t;
 

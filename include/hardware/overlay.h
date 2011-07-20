@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (c) 2009, Code Aurora Forum. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,8 +46,14 @@ enum {
     OVERLAY_FORMAT_RGBA_8888    = HAL_PIXEL_FORMAT_RGBA_8888,
     OVERLAY_FORMAT_RGB_565      = HAL_PIXEL_FORMAT_RGB_565,
     OVERLAY_FORMAT_BGRA_8888    = HAL_PIXEL_FORMAT_BGRA_8888,
-    OVERLAY_FORMAT_YCbYCr_422_I = 0x14,
-    OVERLAY_FORMAT_CbYCrY_422_I = 0x16,
+    OVERLAY_FORMAT_YCbCr_422_SP = HAL_PIXEL_FORMAT_YCbCr_422_SP,
+    OVERLAY_FORMAT_YCbCr_420_SP = HAL_PIXEL_FORMAT_YCbCr_420_SP,
+    OVERLAY_FORMAT_YCrCb_420_SP = HAL_PIXEL_FORMAT_YCrCb_420_SP,
+    OVERLAY_FORMAT_YCbYCr_422_I = HAL_PIXEL_FORMAT_YCbCr_422_I,
+    OVERLAY_FORMAT_YCbYCr_420_I = HAL_PIXEL_FORMAT_YCbCr_420_I,
+    OVERLAY_FORMAT_CbYCrY_422_I = HAL_PIXEL_FORMAT_CbYCrY_422_I,
+    OVERLAY_FORMAT_CbYCrY_420_I = HAL_PIXEL_FORMAT_CbYCrY_420_I,
+    OVERLAY_FORMAT_YCrCb_420_SP_TILE = HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED,
     OVERLAY_FORMAT_DEFAULT      = 99    // The actual color format is determined
                                         // by the overlay
 };
@@ -54,9 +61,9 @@ enum {
 /* values for copybit_set_parameter(OVERLAY_TRANSFORM) */
 enum {
     /* flip source image horizontally */
-    OVERLAY_TRANSFORM_FLIP_H    = HAL_TRANSFORM_FLIP_H,
+    OVERLAY_TRANSFORM_FLIP_H    = HAL_TRANSFORM_FLIP_V,
     /* flip source image vertically */
-    OVERLAY_TRANSFORM_FLIP_V    = HAL_TRANSFORM_FLIP_V,
+    OVERLAY_TRANSFORM_FLIP_V    = HAL_TRANSFORM_FLIP_H,
     /* rotate source image 90 degrees */
     OVERLAY_TRANSFORM_ROT_90    = HAL_TRANSFORM_ROT_90,
     /* rotate source image 180 degrees */
@@ -211,6 +218,8 @@ struct overlay_data_device_t {
             overlay_buffer_t buffer);
 
     int (*getBufferCount)(struct overlay_data_device_t *dev);
+
+    int (*setFd)(struct overlay_data_device_t *dev, int fd);
 };
 
 
